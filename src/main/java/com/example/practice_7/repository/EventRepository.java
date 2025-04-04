@@ -9,7 +9,8 @@ import java.util.List;
 
 @Repository
 public interface EventRepository extends CrudRepository<Event, String> {
-    List<Event> findByNameContainingIgnoreCase(String name);
-    List<Event> findByDateBetweenOrderByDate(LocalDate startDate, LocalDate endDate);
-    List<Event> findByAddressContainingIgnoreCase(String address);
+
+    List<Event> findByName(String springBootWorkshop);
+    List<Event> findByOrganiserName(String organiser);
+    List<Event> findByDate(LocalDate date);
 }

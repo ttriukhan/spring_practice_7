@@ -13,8 +13,12 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class RedisService {
 
-    @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    public RedisService(RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     public void saveTicketWithExpiration(Ticket ticket) {
         if (ticket == null) {
@@ -24,7 +28,7 @@ public class RedisService {
             throw new IllegalArgumentException("Event associated with the ticket cannot be null.");
         }
         LocalDateTime eventEndTime = LocalDateTime.of(ticket.getEvent().getDate(), ticket.getEvent().getEndTime());
-        long expirationTimeInSeconds = Duration.between(LocalDateTime.now(), eventEndTime).getSeconds();
+        long expirationTimeInSeconds = Duration.between(LocalDateTime.now(), eventEndTime).getSeconds() + 10;
         if (expirationTimeInSeconds > 0) {
             redisTemplate.opsForValue().set("ticket:" + ticket.getId(), ticket, expirationTimeInSeconds, TimeUnit.SECONDS);
         } else {
